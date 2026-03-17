@@ -5,8 +5,10 @@ stomataData <- read.csv("./data/raw_stomata_data.csv", stringsAsFactors = TRUE)
 
 stomataDataTidy <- stomataData %>% 
   mutate(area_number = substr(sample_id,1,1)) %>%
-  mutate(sample_number = c(1:32))
-
+  mutate(sample_number = c(1:32)) %>%
+  mutate(stomata_avg = rowMeans(
+    cbind(as.numeric(stomata_count1), as.numeric(stomata_count2)),
+    na.rm = TRUE))
 write.csv(stomataDataTidy,file="./data/outputs/stomataTidy.csv")
 
 #So that we can analyze properties of the species as a whole
@@ -71,3 +73,4 @@ openBB <- lowCover %>%
 coveredBB <- highCover %>% 
   filter(species =="blackberry")
 #Filters for blackberry with high cover
+
