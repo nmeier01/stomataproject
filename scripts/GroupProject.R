@@ -6,6 +6,9 @@ stomataData <- read.csv("./data/raw_stomata_data.csv", stringsAsFactors = TRUE)
 stomataDataTidy <- stomataData %>% 
   mutate(area_number = substr(sample_id,1,1)) %>%
   mutate(sample_number = c(1:32))
+
+write.csv(stomataDataTidy,file="./data/outputs/stomataTidy.csv")
+
 #So that we can analyze properties of the species as a whole
 
 blackberryData <- stomataData %>% 
