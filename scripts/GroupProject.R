@@ -9,8 +9,14 @@ stomataDataTidy <- stomataData %>%
   mutate(stomata_avg = rowMeans(
     cbind(as.numeric(stomata_count1), as.numeric(stomata_count2)),
     na.rm = TRUE))
+
+# change the name of the species to latin names 
+levels(stomataDataTidy$species)[levels(stomataDataTidy$species) == "ivy"] <- "H. helix"
+levels(stomataDataTidy$species)[levels(stomataDataTidy$species) == "blackberry"] <- "R. armeniacus"
+
 write.csv(stomataDataTidy,file="./data/outputs/stomataTidy.csv")
 
+#plants$species[which(plants$species == "CAMROT")] <- "C. rotundifolia"
 #So that we can analyze properties of the species as a whole
 
 blackberryData <- stomataData %>% 
