@@ -23,8 +23,10 @@ densityHighLow <- stomataTidy %>%
            color = "black", fontface = "bold")
 
 
-densityPlot
+densityHighLow
 
+
+#figure 2.
 helix_annotation <- data.frame(
   mpg = 25,   # X-coordinate
   wt = 5,     # Y-coordinate
@@ -49,7 +51,8 @@ densityValues <- stomataTidy %>%
   geom_text(data=armeniacus_annotation,aes(x=mpg,y=wt,label=label),
             color="black",
             size=4,
-            inherit.aes=F)
+            inherit.aes=F) + 
+  labs(x = "Light Value", y="Stomatal Count per 0.16 square mm")
 densityValues
 
 ggsave('./figures/densityHighLow.PNG', plot = densityHighLow)
@@ -72,3 +75,76 @@ t.test(as.numeric(stomata_avg) ~ light_condition, data = blackberryStats)
 
 cor.test(ivyData$light_value,ivyData$stomata_avg)
 cor.test(blackberryData$light_value,blackberryData$stomata_avg)
+
+
+#Figure 3.
+
+cor.test(ivyData$canopy_cover,ivyData$stomata_avg)
+cor.test(blackberryData$canopy_cover,blackberryData$stomata_avg)
+
+helix_annotation_canopy <- data.frame(
+  mpg = 40,   # X-coordinate
+  wt = 5,     # Y-coordinate
+  species = "H. helix",    # Must specify the facet level
+  label = "R = -0.44, p-value = 0.09")
+
+armeniacus_annotation_canopy <- data.frame(
+  mpg = 40,   # X-coordinate
+  wt = 5,     # Y-coordinate
+  species = "R. armeniacus",    # Must specify the facet level
+  label = "R = -0.244, p-value = 0.45")
+
+canopyValues <- stomataTidy %>%
+  ggplot(aes(x=canopy_cover, y=stomata_avg, color = species)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")+
+  facet_wrap(~species)+
+  geom_text(data=helix_annotation_canopy,aes(x=mpg,y=wt,label=label),
+            color="black",
+            size=4,
+            inherit.aes=F)+
+  geom_text(data=armeniacus_annotation_canopy,aes(x=mpg,y=wt,label=label),
+            color="black",
+            size=4,
+            inherit.aes=F) + 
+  labs(x = "Canopy Cover (percentage)", y="Stomatal Count per 0.16 square mm")
+
+
+canopyValues
+
+#Figure 4.
+t.test(as.numeric(stomata_avg) ~ leaf_position, data = ivyStats)
+t.test(as.numeric(stomata_avg) ~ leaf_position, data = blackberryStats)
+
+
+helix_annotation_height <- data.frame(
+  mpg = 1.5,   # X-coordinate
+  wt = 5,     # Y-coordinate
+  species = "H. helix",    # Must specify the facet level
+  label = "t = -1.73, p-value = 0.155")
+
+armeniacus_annotation_height <- data.frame(
+  mpg = 1.5,   # X-coordinate
+  wt = 5,     # Y-coordinate
+  species = "R. armeniacus",    # Must specify the facet level
+  label = "t = 2.76, p-value = 0.06")
+
+heightValues <- stomataTidy %>%
+  ggplot(aes(x=leaf_position, y=stomata_avg, fill = leaf_position)) + 
+  geom_boxplot() + 
+  scale_fill_manual(values = c("low" = "#b37724", "med" = "#FFAA33"))+
+  geom_smooth(method = "lm")+
+  facet_wrap(~species) + 
+  geom_text(data=helix_annotation_height,aes(x=mpg,y=wt,label=label),
+            color="black",
+            size=4,
+            inherit.aes=F)+
+  geom_text(data=armeniacus_annotation_height,aes(x=mpg,y=wt,label=label),
+            color="black",
+            size=4,
+            inherit.aes=F) +
+  labs(x = "Height", y="Stomatal Count per 0.16 square mm", caption = "Figure 4. Stomatal count (per field of view, 0.16 square mm) for English ivy (Hedera helix) and Himalayan blackberry (Rubus armeniacus) collected from differing heights in Pacific Spirit Park. \nThe x-axis represents the categorical height of plants seperated into their respective species, and the y-axis represents stomatal count per field of view. Light conditions are indicated by shading (dark yellow = low height, orange yellow = medium height). Each group includes n = 8 samples. \nP-values represent results from a two-sample t-test comparing stomatal counts between medium and low plant conditions within each species. P-values for differences between high and low light treatments for both species \nwere above 0.05 and therefore statistically non-significant. T-test values for ivy and blackberry were -1.73 and 2.76, respectively. \nData were collected on February 28, 2026.")
+heightValues
+
+ggsave('./figures/canopyValues.PNG', plot = canopyValues)
+ggsave('./figures/heightValues.PNG',plot = heightValues)
