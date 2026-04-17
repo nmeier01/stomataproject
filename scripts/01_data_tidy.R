@@ -1,7 +1,7 @@
 library(tidyverse)
 library(dplyr)
 
-stomataData <- read.csv("./data/raw_stomata_data.csv", stringsAsFactors = TRUE)
+stomataData <- read.csv("./data/inputs/raw_stomata_data.csv", stringsAsFactors = TRUE)
 
 stomataDataTidy <- stomataData %>% 
   mutate(area_number = substr(sample_id,1,1)) %>%
